@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@google/genai": "^3.0.0",
     "@netlify/blobs": "^11.1.7"
   }
 }

@@ -2,10 +2,13 @@
 // Endpoint: /api/ask   POST {"messages":[{"role":"user"|"model","text":"..."}]}
 // Returns  {"reply":"..."}  — book ids appear in the reply as [[book-id]] and the page turns them into links.
 //
-// Setup: Netlify → Project configuration → Environment variables →
-//   GEMINI_API_KEY  = your Gemini key (scope: Functions)        (required)
-//   GEMINI_MODEL    = e.g. gemini-3.5-flash-lite                 (optional)
-// Then redeploy. The key never reaches the browser.
+// Credentials:
+//   • By default Netlify AI Gateway injects GEMINI_API_KEY + GOOGLE_GEMINI_BASE_URL (billed to Netlify credits).
+//   • To use your own Google key instead, set GEMINI_API_KEY in Netlify → Environment variables (scope: Functions);
+//     Netlify then stops injecting and the SDK calls Google directly.
+//   • Optional: GEMINI_MODEL (default gemini-3.5-flash-lite).
+// The key never reaches the browser.
+import { GoogleGenAI } from "@google/genai";
 import { MATRIX, COUNT } from "../lib/catalogue.mjs";
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
@@ -46,8 +49,7 @@ const json = (body, status = 200) =>
 export default async (req, context) => {
   if (req.method !== "POST") return json({ error: "Use POST." }, 405);
 
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) return json({ error: "not-configured" }, 503);
+  if (!process.env.GEMINI_API_KEY) return json({ error: "not-configured" }, 503);
 
   // light rate limit
   const ip = (context && context.ip) || req.headers.get("x-nf-client-connection-ip") || "anon";
@@ -70,30 +72,18 @@ export default async (req, context) => {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`,
-      {
-        method: "POST",
-        signal: ctrl.signal,
-        headers: { "content-type": "application/json", "x-goog-api-key": key },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM }] },
-          contents,
-          generationConfig: { temperature: 0.3, maxOutputTokens: 700 },
-        }),
-      }
-    );
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      console.error("Gemini error", res.status, JSON.stringify(data).slice(0, 500));
-      return json({ error: "upstream" }, 502);
-    }
-    const reply = (data.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
+    const ai = new GoogleGenAI({}); // reads GEMINI_API_KEY and GOOGLE_GEMINI_BASE_URL
+    const result = await ai.models.generateContent({
+      model: MODEL,
+      contents,
+      config: { systemInstruction: SYSTEM, temperature: 0.3, maxOutputTokens: 700, abortSignal: ctrl.signal },
+    });
+    const reply = (result.text || "").trim();
     if (!reply) return json({ error: "upstream" }, 502);
     return json({ reply });
   } catch (e) {
-    const timedOut = e && e.name === "AbortError";
-    console.error("ask failed", timedOut ? "timeout" : e);
+    const timedOut = ctrl.signal.aborted || (e && e.name === "AbortError");
+    console.error("ask failed", timedOut ? "timeout" : String(e).slice(0, 500));
     return json({ error: timedOut ? "timeout" : "upstream" }, timedOut ? 504 : 502);
   } finally {
     clearTimeout(timer);

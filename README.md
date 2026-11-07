@@ -87,9 +87,12 @@ Subject keys: med, math, hs, cs, phy, bio, mgmt, soc, ben, geo, poly.
 
 ## Book assistant (chat)
 A floating "Ask about our books" button opens the assistant on every page.
-- **With Gemini (recommended):** Netlify → Project configuration → Environment variables →
-  add `GEMINI_API_KEY` (scope: Functions) → redeploy. Optional: `GEMINI_MODEL` (default `gemini-3.5-flash-lite`).
-  The key stays on the server (`netlify/functions/ask.mjs`, endpoint `/api/ask`); it is never sent to the browser.
+- **Works out of the box on Netlify:** Netlify AI Gateway supplies Gemini automatically (uses your team's
+  Netlify credits) — no key needed. The function uses Google's official `@google/genai` SDK.
+- **To use your own Google key instead:** Netlify → Project configuration → Environment variables →
+  add `GEMINI_API_KEY` (scope: Functions) → redeploy. Netlify then stops injecting its own.
+  Optional: `GEMINI_MODEL` (default `gemini-3.5-flash-lite`).
+  Either way the key stays on the server (`netlify/functions/ask.mjs`, endpoint `/api/ask`).
 - The assistant answers only from the publication matrix and the publisher's facts, links every title it
   mentions to its book page, replies in English, Bengali or Hindi, and is rate-limited to 12 questions a minute per visitor.
 - **Without a key** (or if Gemini is slow or down) it still works: it searches the same matrix in the browser and
