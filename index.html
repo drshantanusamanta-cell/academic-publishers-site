@@ -152,7 +152,7 @@ section.band{padding:64px 0}
 .subchip{font-size:13px;font-weight:700;padding:5px 11px;border-radius:999px;background:#EFE8FF;color:var(--violet-dd)}
 
 /* footer + counter */
-footer{background:var(--ink);color:#E0E7FF;padding:60px 0 26px;margin-top:0}
+footer{background:var(--ink);color:#E0E7FF;padding:60px 0 90px;margin-top:0}
 .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1.3fr;gap:32px}
 footer h4{margin:0 0 10px;color:#fff;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
 footer a{color:#C7D2FE;text-decoration:none}footer a:hover{color:#fff}
@@ -197,10 +197,10 @@ a.book:hover .t{color:var(--violet-d)}
 .drop-wide{min-width:300px}
 
 /* book assistant */
-.chat-fab{position:fixed;right:22px;bottom:22px;z-index:70;display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;color:#fff;font:800 15px Inter,sans-serif;padding:14px 20px;border-radius:999px;background:linear-gradient(110deg,#1D4ED8,#6D28D9 55%,#15803D);box-shadow:0 14px 30px rgba(76,29,149,.45);transition:transform .15s ease}
+.chat-fab{position:fixed;right:22px;bottom:84px;z-index:70;display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;color:#fff;font:800 15px Inter,sans-serif;padding:14px 20px;border-radius:999px;background:linear-gradient(110deg,#1D4ED8,#6D28D9 55%,#15803D);box-shadow:0 14px 30px rgba(76,29,149,.45);transition:transform .15s ease}
 .chat-fab:hover{transform:translateY(-2px)}
 .chat-fab.hide{display:none}
-.chat-panel{position:fixed;right:22px;bottom:22px;z-index:80;width:400px;max-width:calc(100vw - 24px);height:min(620px,calc(100vh - 44px));display:flex;flex-direction:column;background:#fff;border-radius:24px;box-shadow:0 26px 60px rgba(26,23,68,.38);overflow:hidden}
+.chat-panel{position:fixed;right:22px;bottom:84px;z-index:80;width:400px;max-width:calc(100vw - 24px);height:min(620px,calc(100vh - 108px));display:flex;flex-direction:column;background:#fff;border-radius:24px;box-shadow:0 26px 60px rgba(26,23,68,.38);overflow:hidden}
 .chat-panel[hidden]{display:none}
 .chat-head{display:flex;align-items:center;gap:12px;padding:14px 12px 14px 16px;color:#fff;background:linear-gradient(110deg,#1D4ED8,#6D28D9 55%,#15803D)}
 .chat-head b{display:block;font:800 16px Inter,sans-serif}.chat-head small{display:block;font-size:12px;color:#E0E7FF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -255,8 +255,8 @@ a.book:hover .t{color:var(--violet-d)}
   .stage{min-height:320px;overflow:hidden}.stage .fan{gap:10px}.stage .fan img{width:94px}.stage .fan a:nth-child(2) img{width:122px}
   .pagehead{grid-template-columns:1fr}
   .book-detail{grid-template-columns:1fr}.bd-cover{position:static;max-width:240px;margin:0 auto}.bd-info{padding:24px}.meta{grid-template-columns:1fr}.meta div:nth-child(odd){padding-right:0}
-  .chat-fab span{display:none}.chat-fab{padding:16px;right:16px;bottom:16px}
-  .chat-panel{right:0;bottom:0;width:100vw;max-width:100vw;height:100%;border-radius:0}.pagehead .emblem{width:84px;height:84px;border-radius:24px}
+  .chat-fab span{display:none}.chat-fab{padding:16px;right:16px;bottom:80px}
+  .chat-panel{right:0;top:0;bottom:72px;width:100vw;max-width:100vw;height:auto;border-radius:0 0 20px 20px}.pagehead .emblem{width:84px;height:84px;border-radius:24px}
   .pagehead .emblem svg{width:40px;height:40px}
   section.band{padding:48px 0}
 }
